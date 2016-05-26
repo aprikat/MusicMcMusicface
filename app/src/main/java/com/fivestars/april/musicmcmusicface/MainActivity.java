@@ -5,11 +5,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private String BASE_URL = "https://api.spotify.com/v1/";
+    private SpotifyService spotifyService;
+    private String yeezusId = "5K4W6rqBFWDnAN6FQUkS6x";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +33,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        spotifyService = retrofit.create(SpotifyService.class);
     }
 
     @Override
@@ -48,5 +67,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fab:
+                doTheThings();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void doTheThings() {
+        Call<Artist> call = spotifyService.getArtist(yeezusId);
+        call.enqueue(new Callback<Artist>() {
+            @Override
+            public void onResponse(Call<Artist> call, Response<Artist> response) {
+                Log.d("retrofit", Integer.toString(response.code()));
+                Artist artist = response.body();
+                Log.d("retrofit", response.body().toString());
+                Log.d("retrofit", response.raw().toString());
+                String id = artist.getId();
+                String name = artist.getName();
+                Log.d("retrofit", id);
+                Log.d("retrofit", name);
+            }
+
+            @Override
+            public void onFailure(Call<Artist> call, Throwable t) {
+                Log.d("retrofit", "spotify call failed");
+            }
+        });
     }
 }
