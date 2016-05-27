@@ -6,7 +6,7 @@ import retrofit2.http.Path;
 
 public interface SpotifyService {
 
-    @GET("artists/{artistId}")
+    @GET("/artists/{artistId}")
     Call<Artist> getArtist(@Path("artistId") String id);
 
 }
