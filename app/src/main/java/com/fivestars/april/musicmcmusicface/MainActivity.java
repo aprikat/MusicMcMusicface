@@ -2,6 +2,7 @@ package com.fivestars.april.musicmcmusicface;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,9 +15,10 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -92,14 +94,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doTheThings() {
-        Call<Artist> call = spotifyService.getArtist(yeezusId);
-        try {
-            Response<Artist> response = call.execute();
-            Log.d("artist", Integer.toString(response.code()));
-            Artist artist = response.body();
-            Log.d("artist", artist.getArtistName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Call<AlbumsResponse> albumsCall = spotifyService.getAlbums(yeezusId);
+        albumsCall.enqueue(new Callback<AlbumsResponse>() {
+
+            @Override
+            public void onResponse(Call<AlbumsResponse> call, Response<AlbumsResponse> response) {
+                Log.d("albums", Integer.toString(response.code()));
+                AlbumsResponse albumsResponse = response.body();
+                Log.d("albums", response.body().toString());
+                Log.d("albums", response.raw().toString());
+                Log.d("albums", albumsResponse.getHref());
+
+                List<AlbumsResponse.Album> albums = albumsResponse.getItems();
+                for (AlbumsResponse.Album a : albums) {
+                    Log.d("albums", a.getName());
+                }
+                AlbumsResponse.Album wtt = albums.get(4);
+                List<AlbumsResponse.Image> wttImages = wtt.getImages();
+                for (AlbumsResponse.Image img : wttImages) {
+                    Log.d("images", img.getUrl());
+                }
+
+                loadAlbums(albums);
+            }
+
+            @Override
+            public void onFailure(Call<AlbumsResponse> call, Throwable t) {
+                Log.d("albums", "spotify call failed");
+            }
+        });
+    }
+
+    private void loadAlbums(List<AlbumsResponse.Album> albums) {
+        albumsAdapter.setAlbumList(albums);
+        albumsAdapter.notifyDataSetChanged();
     }
 }
