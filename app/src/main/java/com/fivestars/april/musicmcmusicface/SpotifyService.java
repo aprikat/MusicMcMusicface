@@ -11,4 +11,7 @@ public interface SpotifyService {
 
     @GET("artists/{artistId}")
     Call<Artist> getArtist(@Path("artistId") String id);
+
+    @GET("artists/{artistId}/albums")
+    Call<AlbumsResponse> getAlbums(@Path("artistId") String id);
 }

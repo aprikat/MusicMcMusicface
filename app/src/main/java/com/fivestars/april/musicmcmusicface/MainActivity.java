@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -85,19 +87,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         call.enqueue(new Callback<Artist>() {
             @Override
             public void onResponse(Call<Artist> call, Response<Artist> response) {
-                Log.d("retrofit", Integer.toString(response.code()));
+                Log.d("artist", Integer.toString(response.code()));
                 Artist artist = response.body();
-                Log.d("retrofit", response.body().toString());
-                Log.d("retrofit", response.raw().toString());
+                Log.d("artist", response.body().toString());
+                Log.d("artist", response.raw().toString());
                 String id = artist.getId();
                 String name = artist.getName();
-                Log.d("retrofit", id);
-                Log.d("retrofit", name);
+                Log.d("artist", id);
+                Log.d("artist", name);
             }
 
             @Override
             public void onFailure(Call<Artist> call, Throwable t) {
-                Log.d("retrofit", "spotify call failed");
+                Log.d("artist", "spotify call failed");
+            }
+        });
+
+        Call<AlbumsResponse> call2 = spotifyService.getAlbums(yeezusId);
+        call2.enqueue(new Callback<AlbumsResponse>() {
+            @Override
+            public void onResponse(Call<AlbumsResponse> call, Response<AlbumsResponse> response) {
+                Log.d("albums", Integer.toString(response.code()));
+                AlbumsResponse albumsResponse = response.body();
+                Log.d("albums", response.body().toString());
+                Log.d("albums", response.raw().toString());
+                Log.d("albums", albumsResponse.getHref());
+
+                List<AlbumsResponse.Album> albums = albumsResponse.getItems();
+                for (AlbumsResponse.Album a : albums) {
+                    Log.d("albums", a.getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AlbumsResponse> call, Throwable t) {
+                Log.d("albums", "spotify call failed");
             }
         });
     }
