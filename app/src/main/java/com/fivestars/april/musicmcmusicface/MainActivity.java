@@ -14,8 +14,9 @@ import android.view.MenuItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -92,19 +93,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void doTheThings() {
         Call<Artist> call = spotifyService.getArtist(yeezusId);
-        call.enqueue(new Callback<Artist>() {
-
-            @Override
-            public void onResponse(Call<Artist> call, Response<Artist> response) {
-                Log.d("artist", Integer.toString(response.code()));
-                Artist artist = response.body();
-                Log.d("artist", artist.getArtistName());
-            }
-
-            @Override
-            public void onFailure(Call<Artist> call, Throwable t) {
-                Log.d("artist", "spotify call failed");
-            }
-        });
+        try {
+            Response<Artist> response = call.execute();
+            Log.d("artist", Integer.toString(response.code()));
+            Artist artist = response.body();
+            Log.d("artist", artist.getArtistName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
