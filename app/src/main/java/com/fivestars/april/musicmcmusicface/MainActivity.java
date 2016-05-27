@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doTheThings() {
-        Call<Artist> call = spotifyService.getArtist(yeezusId);
-        call.enqueue(new Callback<Artist>() {
+        Call<Artist> artistCall = spotifyService.getArtist(yeezusId);
+        artistCall.enqueue(new Callback<Artist>() {
             @Override
             public void onResponse(Call<Artist> call, Response<Artist> response) {
                 Log.d("artist", Integer.toString(response.code()));
@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        Call<AlbumsResponse> call2 = spotifyService.getAlbums(yeezusId);
-        call2.enqueue(new Callback<AlbumsResponse>() {
+        Call<AlbumsResponse> albumsCall = spotifyService.getAlbums(yeezusId);
+        albumsCall.enqueue(new Callback<AlbumsResponse>() {
             @Override
             public void onResponse(Call<AlbumsResponse> call, Response<AlbumsResponse> response) {
                 Log.d("albums", Integer.toString(response.code()));

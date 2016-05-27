@@ -2,9 +2,6 @@ package com.fivestars.april.musicmcmusicface;
 
 import java.util.List;
 
-/**
- * Created by April.Luo on 5/26/16.
- */
 public class AlbumsResponse {
     private String href;
     private List<Album> items;
