@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String BASE_URL = "https://api.spotify.com/v1/";
     private SpotifyService spotifyService;
-    private String yeezusId = "5K4W6rqBFWDnAN6FQUkS6x";
+    private String flumeId = "6nxWCVXbOlEVRexSbLsTer";
 
     private RecyclerView albumsRecyclerView;
     private AlbumsAdapter albumsAdapter;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doTheThings() {
-        Call<AlbumsResponse> albumsCall = spotifyService.getAlbums(yeezusId);
+        Call<AlbumsResponse> albumsCall = spotifyService.getAlbums(flumeId);
         albumsCall.enqueue(new Callback<AlbumsResponse>() {
 
             @Override
