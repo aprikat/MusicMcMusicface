@@ -15,6 +15,7 @@ public class AlbumsResponse {
     public static class Album {
         String id;
         String name;
+        List<Image> images;
 
         public Album() {}
 
@@ -23,6 +24,18 @@ public class AlbumsResponse {
 
         public String getName() { return name; }
         public void setName(String name) { this.name = name; }
+
+        public List<Image> getImages() { return images; }
+        public void setImages(List<Image> images) { this.images = images; }
+
+        public static class Image {
+            String url;
+
+            public Image() {}
+
+            public String getUrl() { return url; }
+            public void setUrl(String url) { this.url = url; }
+        }
     }
 
 }

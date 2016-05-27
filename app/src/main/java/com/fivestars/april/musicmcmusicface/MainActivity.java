@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -27,12 +29,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SpotifyService spotifyService;
     private String yeezusId = "5K4W6rqBFWDnAN6FQUkS6x";
 
+    private RecyclerView albumsRecyclerView;
+    private AlbumsAdapter albumsAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        albumsRecyclerView = (RecyclerView) findViewById(R.id.rv_album_list);
+        albumsAdapter = new AlbumsAdapter();
+        albumsRecyclerView.setHasFixedSize(true);
+        albumsRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        albumsRecyclerView.setAdapter(albumsAdapter);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
@@ -83,28 +94,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doTheThings() {
-        Call<Artist> artistCall = spotifyService.getArtist(yeezusId);
-        artistCall.enqueue(new Callback<Artist>() {
-            @Override
-            public void onResponse(Call<Artist> call, Response<Artist> response) {
-                Log.d("artist", Integer.toString(response.code()));
-                Artist artist = response.body();
-                Log.d("artist", response.body().toString());
-                Log.d("artist", response.raw().toString());
-                String id = artist.getId();
-                String name = artist.getName();
-                Log.d("artist", id);
-                Log.d("artist", name);
-            }
-
-            @Override
-            public void onFailure(Call<Artist> call, Throwable t) {
-                Log.d("artist", "spotify call failed");
-            }
-        });
-
         Call<AlbumsResponse> albumsCall = spotifyService.getAlbums(yeezusId);
         albumsCall.enqueue(new Callback<AlbumsResponse>() {
+
             @Override
             public void onResponse(Call<AlbumsResponse> call, Response<AlbumsResponse> response) {
                 Log.d("albums", Integer.toString(response.code()));
@@ -117,6 +109,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for (AlbumsResponse.Album a : albums) {
                     Log.d("albums", a.getName());
                 }
+                AlbumsResponse.Album wtt = albums.get(4);
+                List<AlbumsResponse.Album.Image> wttImages = wtt.getImages();
+                for (AlbumsResponse.Album.Image img : wttImages) {
+                    Log.d("images", img.getUrl());
+                }
+
+                loadAlbums(albums);
             }
 
             @Override
@@ -124,5 +123,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("albums", "spotify call failed");
             }
         });
+    }
+
+    private void loadAlbums(List<AlbumsResponse.Album> albums) {
+        albumsAdapter.setAlbumList(albums);
+        albumsAdapter.notifyDataSetChanged();
     }
 }
