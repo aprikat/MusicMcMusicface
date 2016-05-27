@@ -27,15 +27,15 @@ public class AlbumsResponse {
 
         public List<Image> getImages() { return images; }
         public void setImages(List<Image> images) { this.images = images; }
+    }
 
-        public static class Image {
-            String url;
+    public static class Image {
+        String url;
 
-            public Image() {}
+        public Image() {}
 
-            public String getUrl() { return url; }
-            public void setUrl(String url) { this.url = url; }
-        }
+        public String getUrl() { return url; }
+        public void setUrl(String url) { this.url = url; }
     }
 
 }

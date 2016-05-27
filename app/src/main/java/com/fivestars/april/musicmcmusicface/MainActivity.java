@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d("albums", a.getName());
                 }
                 AlbumsResponse.Album wtt = albums.get(4);
-                List<AlbumsResponse.Album.Image> wttImages = wtt.getImages();
-                for (AlbumsResponse.Album.Image img : wttImages) {
+                List<AlbumsResponse.Image> wttImages = wtt.getImages();
+                for (AlbumsResponse.Image img : wttImages) {
                     Log.d("images", img.getUrl());
                 }
 
