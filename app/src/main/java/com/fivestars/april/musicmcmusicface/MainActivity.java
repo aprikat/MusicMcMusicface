@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String BASE_URL = "https://api.spotify.com/v1/";
     private SpotifyService spotifyService;
-    private String flumeId = "6nxWCVXbOlEVRexSbLsTer";
+    private String kanye = "5K4W6rqBFWDnAN6FQUkS6x";
 
     private RecyclerView albumsRecyclerView;
     private AlbumsAdapter albumsAdapter;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doTheThings() {
-        Call<Artist> call = spotifyService.getArtist(flumeId);
+        Call<Artist> call = spotifyService.getArtist(kanye);
         try {
             Response<Artist> response = call.execute();
             Log.d("artist", Integer.toString(response.code()));
