@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String BASE_URL = "https://api.spotify.com/v1/";
     private SpotifyService spotifyService;
     private String flumeId = "6nxWCVXbOlEVRexSbLsTer";
+    private String porter = "3dz0NnIZhtKKeXZxLOxCam";
 
     private RecyclerView albumsRecyclerView;
     private AlbumsAdapter albumsAdapter;
